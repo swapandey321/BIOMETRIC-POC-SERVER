@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appID": "X9M6H9QASS.com.poc.bio.app",
+        "paths": [ "/*" ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [ "X9M6H9QASS.com.poc.bio.app" ]
+  }
+}
