@@ -24,9 +24,9 @@ const {
 } = require('./db');
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const RP_ID   = '01eba62eb93c.ngrok-free.app';
+const RP_ID   = 'https://a691761947c0.ngrok-free.app';
 const ORIGIN  = ['android:apk-key-hash:qwH3axH7SbscX9IyKpDbKhZL-LzdDDJPr8JAVGZiyKQ',
-  'https://01eba62eb93c.ngrok-free.app'
+  'https://a691761947c0.ngrok-free.app'
 ];
 const HTTPS_PORT = 3000;
 
@@ -71,9 +71,9 @@ app.use('/.well-known', express.static(
   path.join(__dirname, 'public', '.well-known'),
   {
     setHeaders: (res, filePath) => {
-      if (filePath.endsWith('.json')) {
+      
         res.type('application/json');
-      }
+      
     },
   }
 ));
