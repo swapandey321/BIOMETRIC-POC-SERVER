@@ -2,12 +2,12 @@
   "applinks": {
     "details": [
       {
-        "appID": "X9M6H9QASS.com.poc.bio.app",
-        "paths": [ "/*" ]
+        "appIDs": [ "TNQDX9X9CZ.com.poc.bio.app" ],
+        "paths": [ "/register/*", "/authenticate/*", "/*" ]
       }
     ]
   },
   "webcredentials": {
-    "apps": [ "X9M6H9QASS.com.poc.bio.app" ]
+    "apps": [ "TNQDX9X9CZ.com.poc.bio.app" ]
   }
 }
