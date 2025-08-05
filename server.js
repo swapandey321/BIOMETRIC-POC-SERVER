@@ -24,9 +24,9 @@ const {
 } = require('./db');
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const RP_ID   = 'https://a691761947c0.ngrok-free.app';
+const RP_ID   = 'e0eb9dfc8a2c.ngrok-free.app';
 const ORIGIN  = ['android:apk-key-hash:qwH3axH7SbscX9IyKpDbKhZL-LzdDDJPr8JAVGZiyKQ',
-  'https://a691761947c0.ngrok-free.app'
+  'https://e0eb9dfc8a2c.ngrok-free.app'
 ];
 const HTTPS_PORT = 3000;
 
@@ -138,16 +138,19 @@ console.log('options.user ===', options.user);
 });
 
 app.post('/verify-register', async (req, res) => {
+  console.log('inside pingone call')
+  console.log(req.body);
   const regInfo = req.cookies.regInfo && JSON.parse(req.cookies.regInfo);
   if (!regInfo) {
     return res.status(400).json({ error: 'No registration in progress' });
   }
+  
 
   try {
     const verification = await verifyRegistrationResponse({
       response:         req.body,
       expectedChallenge: regInfo.challenge,
-      expectedOrigin:    [ORIGIN],
+      expectedOrigin:    ORIGIN,
       expectedRPID:      RP_ID,
     });
 
@@ -158,14 +161,20 @@ app.post('/verify-register', async (req, res) => {
 
     // Persist the newly-registered credential on the user
     const { credential } = verification.registrationInfo;
-    createUser(regInfo.userId, regInfo.email, {
-      id:          credential.id,                            // base64url string
-      publicKey:   bufferToBase64url(credential.publicKey),  // base64url string
-      counter:     credential.counter,                       // number
-      deviceType:  verification.registrationInfo.credentialDeviceType,
-      backedUp:    verification.registrationInfo.credentialBackedUp,
-      transports:  credential.transports,
-    });
+    
+    createUser(
+  regInfo.userId,
+  regInfo.email,
+  {
+    id:          credential.id,                            // base64url string
+    publicKey:   bufferToBase64url(credential.publicKey),  // base64url string
+    counter:     credential.counter,                       // number
+    deviceType:  verification.registrationInfo.credentialDeviceType,
+    backedUp:    verification.registrationInfo.credentialBackedUp,
+    transports:  credential.transports,
+  }
+);
+
 
     const fetched = getUserById(regInfo.userId);
 console.log('getUserById fetched:', fetched);
@@ -187,7 +196,8 @@ console.log('ALL USERS:', require('./db').users);
             count: verification.registrationInfo.credential.counter,
             deviceType: verification.registrationInfo.credentialDeviceType,
             backedUp: verification.registrationInfo.credentialBackedUp,
-            transports: req.body.transport});
+            transports: req.body.transport,
+          userName: fetched1.email});
   } catch (err) {
     console.error('Error in /verify-register:', err);
     return res.status(400).json({ error: err.message });
@@ -205,23 +215,24 @@ app.get('/init-auth', async (req, res) => {
 
   const user = getUserByEmail(email);
   console.log('getUserByEmail fetched:', user);
-  if (!user || !user.passKey) {
-    return res.status(404).json({ error: 'No registered credentials for this user' });
-  }
-  console.log('→ typeof userName:', typeof user.email, user.email);
-console.log('→ typeof userDisplayName:', typeof user.email, user.email);
+  if (!user || !user.passKeys || user.passKeys.length === 0) {
+  return res.status(404).json({ error: 'No registered credentials for this user' });
+}
+
+
   console.log('user details from inline memory')
   console.log(JSON.stringify(user));
 
   const options = await generateAuthenticationOptions({
     rpID: RP_ID,
-    allowCredentials: [{
-      id:         user.passKey.id,
-      type:       'public-key',
-      transports: user.passKey.transports,
-    }],
-    userVerification: 'required',
-  });
+    allowCredentials:user.passKeys.map(pk => ({
+    id: pk.id,
+    type: 'public-key',
+    transports: pk.transports,
+  })),
+  userVerification: 'required',
+});
+
 
   // Store challenge for verification
   res.cookie('authInfo', JSON.stringify({
@@ -242,36 +253,47 @@ app.post('/verify-auth', async (req, res) => {
   if (!authInfo) {
     return res.status(400).json({ error: 'No authentication in progress' });
   }
+  
 
   const user = getUserById(authInfo.userId);
-  if (!user || !user.passKey) {
+  if (!user || !user.passKeys || user.passKeys.length === 0) {
     return res.status(404).json({ error: 'User or credential not found' });
   }
   console.log('Incoming body:', req.body);
   console.log('typeof id:', typeof req.body.id, req.body.id);
   console.log('typeof rawId:', typeof req.body.rawId, req.body.rawId);
   console.log('authInfo from cookie:', authInfo);
-console.log('user fetched by ID:', user);
-console.log('user.passKey:', user && user.passKey);
-console.log('passKey keys:', user && user.passKey && Object.keys(user.passKey));
+  console.log('user fetched by ID:', user);
+  // Find the matching credential by ID
+  const credentialId = req.body.id || req.body.rawId;
+  const matchingCredential = user.passKeys.find(pk => pk.id === credentialId);
+
+  if (!matchingCredential) {
+    return res.status(404).json({ error: 'Matching credential not found' });
+  }
+
+
 
 
   try {
     const verification = await verifyAuthenticationResponse({
   response:          req.body,
   expectedChallenge: authInfo.challenge,
-  expectedOrigin:    [ORIGIN],
+  expectedOrigin:    ORIGIN,
   expectedRPID:      RP_ID,
 
   // note the plural key!
   credential: {
-      id:        base64urlToBuffer(user.passKey.id),
-      publicKey: base64urlToBuffer(user.passKey.publicKey),
-      counter:             user.passKey.counter,
-      transports:          user.passKey.transports,
+      id:        base64urlToBuffer(matchingCredential.id),
+      publicKey: base64urlToBuffer(matchingCredential.publicKey),
+      counter:             matchingCredential.counter,
+      transports:          matchingCredential.transports,
     },
   
 });
+
+console.log('after verify-auth');
+console.log(verification);
 
 
     if (!verification.verified) {
@@ -284,7 +306,7 @@ console.log('passKey keys:', user && user.passKey && Object.keys(user.passKey));
     // Clear the auth cookie
     res.clearCookie('authInfo');
 
-    return res.json({ verified: true });
+    return res.json(verification);
   } catch (err) {
     console.error('Error in /verify-auth:', err);
     return res.status(400).json({ error: err.message });
