@@ -24,9 +24,9 @@ const {
 } = require('./db');
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const RP_ID   = 'e0eb9dfc8a2c.ngrok-free.app';
+const RP_ID   = '0226e7e30a35.ngrok-free.app';
 const ORIGIN  = ['android:apk-key-hash:qwH3axH7SbscX9IyKpDbKhZL-LzdDDJPr8JAVGZiyKQ',
-  'https://e0eb9dfc8a2c.ngrok-free.app'
+  'https://0226e7e30a35.ngrok-free.app'
 ];
 const HTTPS_PORT = 3000;
 
@@ -89,6 +89,20 @@ app.get('/init-register', async (req, res) => {
   if (!email) {
     return res.status(400).json({ error: 'Email is required' });
   }
+  const existingUser = getUserByEmail(email); // or getUserById(userIdBuffer)
+console.log('inside init-register');
+console.log(existingUser);
+let excludeCredentials = [];
+
+if (existingUser && existingUser.passKeys) {
+  
+  excludeCredentials = existingUser.passKeys.map(pk => ({
+    id: pk.id, // base64url string
+    type: 'public-key',
+    transports: pk.transports || ['internal'], // optional
+  }));
+}
+
 
   // See if we already have a user; if not, create a placeholder
   
@@ -115,7 +129,7 @@ console.log('→ userIdBuffer (hex):', userIdBuffer.toString('hex'));
     authenticatorSelection: {
       residentKey:      'preferred',
       userVerification: 'preferred',
-    },excludeCredentials: [],
+    },excludeCredentials: excludeCredentials,
 
     
   });
