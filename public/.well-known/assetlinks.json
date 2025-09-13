@@ -21,5 +21,30 @@
         "AB:01:F7:6B:11:FB:49:BB:1C:5F:D2:32:2A:90:DB:2A:16:4B:F8:BC:DD:0C:32:4F:AF:C2:40:54:66:62:C8:A4"
       ]
     }
+  },
+  {
+    "relation" : [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target" : {
+      "namespace" : "android_app",
+      "package_name" : "com.standard.shell.app",
+      "sha256_cert_fingerprints" : [
+        "AB:01:F7:6B:11:FB:49:BB:1C:5F:D2:32:2A:90:DB:2A:16:4B:F8:BC:DD:0C:32:4F:AF:C2:40:54:66:62:C8:A4"
+      ]
+    }
+  },
+  {
+    "relation" : [
+      
+    ],
+    "target" : {
+      "namespace" : "android_app",
+      "package_name" : "com.standard.shell.app",
+      "sha256_cert_fingerprints" : [
+        "F0:BA:F2:1B:0F:09:77:87:36:C3:56:33:51:D6:09:D1:FF:1C:C0:C8:42:2D:00:09:BD:18:D2:C4:FB:B3:A6:4C"
+      ]
+    }
   }
 ]
