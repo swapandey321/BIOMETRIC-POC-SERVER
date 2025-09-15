@@ -1,4 +1,4 @@
-[
+ [
   {
     "relation" : [
       "delegate_permission/common.handle_all_urls",
@@ -29,21 +29,23 @@
     ],
     "target" : {
       "namespace" : "android_app",
-      "package_name" : "com.standard.shell.app",
+      "package_name" : "com.standard.account",
       "sha256_cert_fingerprints" : [
-        "AB:01:F7:6B:11:FB:49:BB:1C:5F:D2:32:2A:90:DB:2A:16:4B:F8:BC:DD:0C:32:4F:AF:C2:40:54:66:62:C8:A4"
+        "24:42:F3:1C:45:E3:12:A6:E1:D4:10:FB:4A:7A:99:EE:DC:51:40:EB:01:28:86:09:4C:02:45:F5:5C:4E:E5:D8"
       ]
     }
   },
   {
     "relation" : [
-      
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
     ],
     "target" : {
       "namespace" : "android_app",
       "package_name" : "com.standard.shell.app",
       "sha256_cert_fingerprints" : [
-        "F0:BA:F2:1B:0F:09:77:87:36:C3:56:33:51:D6:09:D1:FF:1C:C0:C8:42:2D:00:09:BD:18:D2:C4:FB:B3:A6:4C"
+        "24:42:F3:1C:45:E3:12:A6:E1:D4:10:FB:4A:7A:99:EE:DC:51:40:EB:01:28:86:09:4C:02:45:F5:5C:4E:E5:D8",
+        "AB:01:F7:6B:11:FB:49:BB:1C:5F:D2:32:2A:90:DB:2A:16:4B:F8:BC:DD:0C:32:4F:AF:C2:40:54:66:62:C8:A4"
       ]
     }
   }
