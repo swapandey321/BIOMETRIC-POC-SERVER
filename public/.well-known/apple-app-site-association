@@ -4,8 +4,9 @@
       {
         "appIDs": [ 
           "TNQDX9X9CZ.com.standard.ersa",
-          "TNQDX9X9CZ.com.standard.shell.app"
-		    ],
+          "TNQDX9X9CZ.com.standard.shell.app",
+          "TNQDX9X9CZ.com.poc.bio.app"
+        ],
         "paths": [ "/register/*", "/authenticate/*", "/*" ]
       }
     ]
@@ -13,7 +14,9 @@
   "webcredentials": {
     "apps": [ 
       "TNQDX9X9CZ.com.standard.ersa",
-      "TNQDX9X9CZ.com.standard.shell.app"
-		]
+      "TNQDX9X9CZ.com.standard.shell.app",
+      "TNQDX9X9CZ.com.poc.bio.app"
+  ]
   }
 }
+ 
