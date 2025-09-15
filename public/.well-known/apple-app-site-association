@@ -2,12 +2,18 @@
   "applinks": {
     "details": [
       {
-        "appIDs": [ "TNQDX9X9CZ.com.poc.bio.app" ],
+        "appIDs": [ 
+          "TNQDX9X9CZ.com.standard.ersa",
+          "TNQDX9X9CZ.com.standard.shell.app"
+		    ],
         "paths": [ "/register/*", "/authenticate/*", "/*" ]
       }
     ]
   },
   "webcredentials": {
-    "apps": [ "TNQDX9X9CZ.com.poc.bio.app" ]
+    "apps": [ 
+      "TNQDX9X9CZ.com.standard.ersa",
+      "TNQDX9X9CZ.com.standard.shell.app"
+		]
   }
 }
